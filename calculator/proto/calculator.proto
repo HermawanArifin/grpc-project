@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package calculator;
+
+option go_package = "github.com/HermawanArifin/grpc-project/calculator/proto";
+
+message CalculatorAdditionRequest {
+    int64 firstDigit = 1;
+    int64 secondDigit = 2;
+}
+
+message CalculatorAdditionResult {
+    int64 result = 1;
+}
+
+service CalculatorService{
+    rpc Addition (CalculatorAdditionRequest) returns (CalculatorAdditionResult);
+}
