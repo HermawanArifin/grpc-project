@@ -13,6 +13,16 @@ message CalculatorAdditionResult {
     int64 result = 1;
 }
 
+message CalculatorPrimeRequest {
+    int64 number = 1;
+}
+
+message CalculatorPrimeResult{
+    int64 number = 1;
+}
+
+
 service CalculatorService{
     rpc Addition (CalculatorAdditionRequest) returns (CalculatorAdditionResult);
+    rpc PrimeStream (CalculatorPrimeRequest) returns (stream CalculatorPrimeResult);
 }

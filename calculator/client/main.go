@@ -22,4 +22,5 @@ func main() {
 	client := pb.NewCalculatorServiceClient(conn)
 
 	addition(client)
+	primeStream(client)
 }
