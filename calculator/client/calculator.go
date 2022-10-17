@@ -46,3 +46,28 @@ func primeStream(c pb.CalculatorServiceClient) {
 		log.Printf("result: %d", msg.Number)
 	}
 }
+
+func average(c pb.CalculatorServiceClient) {
+	inputs := []*pb.CalculatorAverageRequest{
+		{Number: 1},
+		{Number: 2},
+		{Number: 3},
+		{Number: 4},
+	}
+
+	stream, err := c.Average(context.Background())
+	if err != nil {
+		log.Fatal("error while streaming average", err)
+	}
+
+	for _, input := range inputs {
+		stream.Send(input)
+	}
+
+	res, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatal("error while closing stream", err)
+	}
+
+	log.Print("result", res)
+}
