@@ -23,4 +23,5 @@ func main() {
 
 	doGreet(client)
 	doStreamGreetManyTimes(client)
+	doLongGreet(client)
 }
