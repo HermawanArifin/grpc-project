@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 
 	pb "github.com/HermawanArifin/grpc-project/greet/proto"
 )
@@ -12,7 +12,19 @@ import (
 const clientAddress = "localhost:50051"
 
 func main() {
-	conn, err := grpc.Dial(clientAddress, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	opts := []grpc.DialOption{}
+	tls := true
+	if tls {
+		certFile := "ssl/ca.crt"
+
+		creds, err := credentials.NewClientTLSFromFile(certFile, "")
+		if err != nil {
+			log.Fatalf("failed to load credentials: %+v\n", err)
+		}
+		opts = append(opts, grpc.WithTransportCredentials(creds))
+	}
+
+	conn, err := grpc.Dial(clientAddress, opts...)
 	if err != nil {
 		log.Fatalf("Failed to connect to connect: %+v\n", err)
 	}
