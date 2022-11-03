@@ -4,6 +4,9 @@ import (
 	"context"
 	"io"
 	"log"
+	"strconv"
+	"sync"
+	"time"
 
 	pb "github.com/HermawanArifin/grpc-project/calculator/proto"
 )
@@ -70,4 +73,58 @@ func average(c pb.CalculatorServiceClient) {
 	}
 
 	log.Print("result", res)
+}
+
+func maximum(c pb.CalculatorServiceClient) {
+	stream, err := c.Maximum(context.Background())
+	if err != nil {
+		log.Fatalf("[maximum] c.Maximum() got error: %+v\n", err)
+	}
+
+	inputs := []*pb.CalculatorMaximumRequest{
+		{Number: 100},
+		{Number: 4},
+		{Number: 101},
+		{Number: 12},
+		{Number: 15},
+		{Number: 1},
+	}
+
+	var wg sync.WaitGroup
+	// send message
+	wg.Add(1)
+	go func() {
+		for _, input := range inputs {
+			err := stream.Send(&pb.CalculatorMaximumRequest{
+				Number: input.Number,
+			})
+			if err != nil {
+				log.Printf("[maximum] stream.Send() got error: %+v\n", err)
+			}
+
+			time.Sleep(1 * time.Second)
+		}
+
+		stream.CloseSend()
+		wg.Done()
+	}()
+
+	// receive message
+	wg.Add(1)
+	go func() {
+		for {
+			msg, err := stream.Recv()
+			if err == io.EOF {
+				wg.Done()
+				break
+			}
+			if err != nil {
+				log.Printf("[maximum] stream.Recv() got error: %+v\n", err)
+			}
+
+			resultStr := strconv.FormatInt(msg.Result, 10)
+			log.Println("Maximum number is: ", resultStr)
+		}
+	}()
+	wg.Wait()
 }

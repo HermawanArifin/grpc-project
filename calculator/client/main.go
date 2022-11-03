@@ -21,7 +21,8 @@ func main() {
 
 	client := pb.NewCalculatorServiceClient(conn)
 
-	// addition(client)
-	// primeStream(client)
+	addition(client)
+	primeStream(client)
 	average(client)
+	maximum(client)
 }

@@ -29,9 +29,18 @@ message CalculatorAverageResult {
     float result = 1;
 }
 
+message CalculatorMaximumRequest {
+    int64 number = 1;
+}
+
+message CalculatorMaximumResult {
+    int64 result = 1;
+}
+
 
 service CalculatorService{
     rpc Addition (CalculatorAdditionRequest) returns (CalculatorAdditionResult);
     rpc PrimeStream (CalculatorPrimeRequest) returns (stream CalculatorPrimeResult);
     rpc Average(stream CalculatorAverageRequest) returns (CalculatorAverageResult);
+    rpc Maximum(stream CalculatorMaximumRequest) returns (stream CalculatorMaximumResult);
 }
